@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Pixel Bloléquin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: une colonne mobile, hero court, offres en liste, formulaire de commande vers WhatsApp */
+:root {
+  --bg: #f2f5f1;
+  --surface: #ffffff;
+  --fg: #10261f;
+  --muted: #55675f;
+  --line: #d5ddd6;
+  --accent: #e8590c;
+  --accent-fg: #ffffff;
+  --ok: #1f7a4d;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1a16; --surface: #16251f; --fg: #eaf1ec; --muted: #9bb0a5;
+    --line: #2a3d34; --accent: #ff7a33; --accent-fg: #1a0c02; --ok: #4cc58a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1a16; --surface: #16251f; --fg: #eaf1ec; --muted: #9bb0a5;
+  --line: #2a3d34; --accent: #ff7a33; --accent-fg: #1a0c02; --ok: #4cc58a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  padding-inline: 16px; padding-block: 20px 48px;
+}
+.wrap { max-width: 560px; margin-inline: auto; display: flex; flex-direction: column; gap: 32px; }
+h1, h2 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: 2.3rem; font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: 1.4rem; font-weight: 800; }
+p { margin: 0; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+.dot { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; }
+.lead { color: var(--muted); font-size: 1.05rem; margin-top: 12px; }
+.hero { display: flex; flex-direction: column; gap: 16px; }
+.btn {
+  font: inherit; font-weight: 700; background: var(--accent); color: var(--accent-fg);
+  border: 0; border-radius: 10px; padding: 14px 18px; text-align: center;
+  text-decoration: none; cursor: pointer; display: block; width: 100%;
+}
+.btn:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
+.btn.ghost { background: transparent; color: var(--fg); border: 2px solid var(--fg); }
+.proof { display: flex; flex-wrap: wrap; gap: 8px 16px; color: var(--muted); font-size: 0.9rem; }
+.proof span::before { content: "✓ "; color: var(--ok); font-weight: 700; }
+.offers { display: flex; flex-direction: column; border-top: 2px solid var(--fg); }
+.offer { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.offer b { font-size: 1.05rem; }
+.offer small { color: var(--muted); grid-column: 1; }
+.price { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; text-align: right; grid-row: 1 / span 2; grid-column: 2; align-self: center; white-space: nowrap; }
+.price small { display: block; font-family: var(--font-body); font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.gallery { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+.poster {
+  flex: 0 0 232px; aspect-ratio: 4 / 5; scroll-snap-align: start; border-radius: 6px;
+  padding: 16px; display: flex; flex-direction: column; justify-content: space-between;
+  position: relative; overflow: hidden; line-height: 1.1;
+}
+.poster .tag { align-self: flex-start; font-weight: 700; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 8px; border-radius: 3px; }
+.poster .big { font-family: var(--font-display); font-weight: 800; font-size: 30px; letter-spacing: -0.02em; }
+.poster .sun { align-self: flex-start; font-family: var(--font-display); font-weight: 800; font-size: 34px; padding: 8px 14px; border-radius: 4px; }
+.poster .sun small { display: block; font-family: var(--font-body); font-weight: 700; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.poster .pfoot { font-size: 12px; line-height: 1.35; }
+.poster .pfoot b { display: block; font-size: 14px; }
+.p-food { background: #f6c445; color: #2b1a05; }
+.p-food .tag { background: #2b1a05; color: #f6c445; }
+.p-food .sun { background: #c8341c; color: #fff; }
+.p-salon { background: #3a1c4f; color: #fbe9f3; }
+.p-salon .tag { background: #f2a6c8; color: #3a1c4f; }
+.p-salon .sun { background: #f2a6c8; color: #3a1c4f; }
+.p-shop { background: #0f5c4a; color: #f4efe2; }
+.p-shop .tag { background: #f4efe2; color: #0f5c4a; }
+.p-shop .sun { background: #ffb703; color: #0f2a22; }
+.poster { aspect-ratio: 3 / 4; padding: 0; justify-content: flex-start; }
+.poster img { width: 100%; height: 40%; object-fit: cover; display: block; }
+.poster .tag { position: absolute; top: 10px; left: 10px; }
+.poster .pbody { flex: 1; min-height: 0; padding: 12px 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; }
+.poster .big { font-size: 22px; }
+.poster .sun { font-size: 24px; padding: 5px 10px; }
+.poster .sun small { font-size: 10px; }
+.poster .pfoot { font-size: 11px; line-height: 1.3; }
+.poster .pfoot b { font-size: 13px; }
+.steps { display: grid; gap: 12px; padding: 0; margin: 0; list-style: none; }
+.steps li { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.steps b { display: block; }
+.steps span { color: var(--muted); font-size: 0.95rem; }
+form { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+label { font-weight: 700; font-size: 0.9rem; display: flex; flex-direction: column; gap: 6px; }
+select, input, textarea {
+  font: inherit; font-weight: 400; color: var(--fg); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 8px; padding: 12px; width: 100%; min-width: 0;
+}
+textarea { min-height: 84px; resize: vertical; }
+.total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-top: 1px dashed var(--line); padding-top: 14px; }
+.total strong { font-family: var(--font-display); font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.note { color: var(--muted); font-size: 0.88rem; }
+.foot { color: var(--muted); font-size: 0.85rem; text-align: center; }
+</style>
+
+<div class="wrap">
+  <div class="brand"><span class="dot"></span><span id="brandName">Pixel Bloléquin</span></div>
+
+  <section class="hero">
+    <h1>Des affiches et des posts qui amènent des clients à votre boutique.</h1>
+    <p class="lead">Restaurants, salons, boutiques : je crée vos visuels pour Facebook, Instagram et WhatsApp. Livraison rapide, paiement par Mobile Money.</p>
+    <a class="btn" href="#commande">Commander maintenant</a>
+    <div class="proof"><span>Livré en 24 h</span><span>Modifications incluses</span><span>50 % d'avance</span></div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <h2>Mes offres</h2>
+    <div class="offers" id="offers"></div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <h2>Exemples d'affiches</h2>
+    <p class="note">Commerces imaginaires, pour montrer le style. Faites défiler vers la droite.</p>
+    <div class="gallery">
+      <div class="poster p-food">
+        <img src="poisson.jpg" alt="Cuisinier qui sert du poisson braisé et de l'attiéké" style="object-position:50% 72%">
+        <span class="tag">Plat du jour</span>
+        <div class="pbody">
+          <div class="big">Poisson<br>braisé</div>
+          <div class="sun">2 500<small>FCFA</small></div>
+          <div class="pfoot"><b>Chez Mariam</b>Livraison à Bloléquin<br>07 00 00 00 00</div>
+        </div>
+      </div>
+      <div class="poster p-salon">
+        <img src="barber.jpg" alt="Coiffeur qui coupe les cheveux d'un client" style="object-position:50% 38%">
+        <span class="tag">Nouveau</span>
+        <div class="pbody">
+          <div class="big">Coupe<br>&amp; dégradé</div>
+          <div class="sun">-10%<small>1er passage</small></div>
+          <div class="pfoot"><b>Salon Élégance</b>Réservez avant samedi<br>07 00 00 00 00</div>
+        </div>
+      </div>
+      <div class="poster p-shop">
+        <img src="terrasse.jpg" alt="Terrasse d'un restaurant avec des clients attablés" style="object-position:50% 55%">
+        <span class="tag">Ce week-end</span>
+        <div class="pbody">
+          <div class="big">Venez en<br>famille</div>
+          <div class="sun">Boisson<small>offerte</small></div>
+          <div class="pfoot"><b>Maquis La Terrasse</b>Ouvert jusqu'à 22h<br>07 00 00 00 00</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <h2>Comment ça marche</h2>
+    <ul class="steps">
+      <li><b>Vous écrivez sur WhatsApp</b><span>Votre commerce, votre offre, vos photos.</span></li>
+      <li><b>Je prépare votre visuel</b><span>Vous recevez une proposition le jour même.</span></li>
+      <li><b>Vous payez, je livre</b><span>50 % à la commande, le reste à la livraison, par Mobile Money.</span></li>
+    </ul>
+  </section>
+
+  <section id="commande" style="display:flex;flex-direction:column;gap:14px">
+    <h2>Passer commande</h2>
+    <form id="orderForm">
+      <label for="service">Ce que vous voulez
+        <select id="service"></select>
+      </label>
+      <label for="shop">Nom de votre commerce
+        <input id="shop" type="text" placeholder="Ex : Chez Mariam, Salon Élégance" autocomplete="off">
+      </label>
+      <label for="place">Quartier
+        <input id="place" type="text" placeholder="Ex : centre-ville, près du marché" autocomplete="off">
+      </label>
+      <label for="msg">Votre message (facultatif)
+        <textarea id="msg" placeholder="Ex : promo -20 % ce week-end sur les robes"></textarea>
+      </label>
+      <div class="total"><span>Total</span><strong id="total">0 FCFA</strong></div>
+      <p class="note" id="advance"></p>
+      <a class="btn" id="send" href="#" target="_blank" rel="noopener">Envoyer ma commande sur WhatsApp</a>
+      <p class="note" id="numLine"></p>
+    </form>
+  </section>
+
+  <p class="foot">Les prix sont en FCFA. Paiement accepté : Orange Money, MTN Money, Moov Money, Wave.</p>
+</div>
+
+<script>
+// À modifier : nom, numéro WhatsApp (indicatif sans +, ex : 2250707070707) et offres.
+var CONFIG = {
+  name: "Pixel Bloléquin",
+  whatsapp: "2250546445107",
+  display: "+225 05 46 44 51 07",
+  offers: [
+    { id: "affiche", label: "1 affiche", note: "Pour une promo, un événement ou l'ouverture d'un commerce", price: 3000, unit: "l'unité" },
+    { id: "pack10", label: "Pack 10 posts", note: "Textes et visuels prêts à publier", price: 20000, unit: "par mois" },
+    { id: "pack30", label: "Pack 30 posts", note: "Un post par jour pendant un mois", price: 45000, unit: "par mois" },
+    { id: "cv", label: "CV ou lettre de motivation", note: "Mise en page propre, prêt à envoyer", price: 2000, unit: "le document" }
+  ]
+};
+
+function fmt(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " FCFA"; }
+function byId(id) { return CONFIG.offers.filter(function (o) { return o.id === id; })[0]; }
+
+document.getElementById("brandName").textContent = CONFIG.name;
+document.title = CONFIG.name;
+
+var offersEl = document.getElementById("offers");
+var sel = document.getElementById("service");
+CONFIG.offers.forEach(function (o) {
+  var d = document.createElement("div");
+  d.className = "offer";
+  d.innerHTML = "<b></b><small></small><div class=\"price\"></div>";
+  d.querySelector("b").textContent = o.label;
+  d.querySelector("small").textContent = o.note;
+  d.querySelector(".price").innerHTML = fmt(o.price) + "<small>" + o.unit + "</small>";
+  offersEl.appendChild(d);
+  var opt = document.createElement("option");
+  opt.value = o.id;
+  opt.textContent = o.label + " (" + fmt(o.price) + ")";
+  sel.appendChild(opt);
+});
+
+var shop = document.getElementById("shop");
+var place = document.getElementById("place");
+var msg = document.getElementById("msg");
+var send = document.getElementById("send");
+
+function update() {
+  var o = byId(sel.value);
+  document.getElementById("total").textContent = fmt(o.price);
+  document.getElementById("advance").textContent = "Avance à payer : " + fmt(Math.round(o.price / 2)) + ". Le reste à la livraison.";
+  var text = "Bonjour, je veux commander : " + o.label + " (" + fmt(o.price) + ").";
+  if (shop.value.trim()) text += "\nCommerce : " + shop.value.trim();
+  if (place.value.trim()) text += "\nQuartier : " + place.value.trim();
+  if (msg.value.trim()) text += "\nMessage : " + msg.value.trim();
+  send.href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(text);
+  document.getElementById("numLine").textContent = CONFIG.whatsapp
+    ? "Si le bouton ne s'ouvre pas, écrivez-moi au " + CONFIG.display + "."
+    : "";
+}
+[sel, shop, place, msg].forEach(function (el) { el.addEventListener("input", update); });
+document.getElementById("orderForm").addEventListener("submit", function (e) { e.preventDefault(); });
+update();
+</script>
+
+</body>
+</html>
